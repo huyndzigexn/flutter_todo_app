@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import './todo.dart';
 
-void main() {
+Future<void> main() async {
+  await dotenv.load();
   runApp(MyApp());
 }
 
@@ -24,6 +26,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  TextEditingController _usernameController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
 
   @override
@@ -37,6 +40,13 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            TextField(
+              controller: _usernameController,
+              decoration: InputDecoration(
+                labelText: 'Username',
+              ),
+            ),
+            SizedBox(height: 16),
             TextField(
               controller: _passwordController,
               obscureText: true,
@@ -58,19 +68,28 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _login() {
+    String expectedUsername = dotenv.env['USERNAME'] ?? '';
+    String expectedPassword = dotenv.env['PASSWORD'] ?? '';
+    String enteredUsername = _usernameController.text;
     String enteredPassword = _passwordController.text;
-    if (enteredPassword == 'your_password') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => TodoScreen()),
-      );
+    print('enteredUsername:' + enteredUsername);
+    print('expectedPassword:' + expectedPassword);
+
+    if (enteredUsername == expectedUsername &&
+        enteredPassword == expectedPassword) {
+      print('OK');
+
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(builder: (context) => TodoScreen()),
+      // );
     } else {
       showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Invalid Password'),
-            content: Text('The entered password is incorrect.'),
+            title: Text('Invalid Credentials'),
+            content: Text('The entered username or password is incorrect.'),
             actions: [
               TextButton(
                 onPressed: () {
