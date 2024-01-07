@@ -79,10 +79,10 @@ class _LoginScreenState extends State<LoginScreen> {
         enteredPassword == expectedPassword) {
       print('OK');
 
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(builder: (context) => TodoScreen()),
-      // );
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => TodoScreen()),
+      );
     } else {
       showDialog(
         context: context,
